@@ -1,4 +1,3 @@
-// example
 'use strict'
 
 var Botkit = require('botkit');
