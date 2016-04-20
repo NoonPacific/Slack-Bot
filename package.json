@@ -4,7 +4,8 @@
   "description": "A sample Beep Boop Node.js Slackbot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,14 @@
   "homepage": "https://github.com/beepboophq/node-slack-bot#readme",
   "dependencies": {
     "beepboop-botkit": "^1.1.2",
-    "botkit": "0.0.5"
+    "botkit": "0.0.5",
+    "chai": "^3.5.0",
+    "cron": "^1.1.0",
+    "lokijs": "^1.3.16",
+    "mocha": "^2.4.5",
+    "moment": "^2.13.0",
+    "object-merge": "^2.5.1",
+    "promise": "^7.1.1",
+    "request": "^2.72.0"
   }
 }
