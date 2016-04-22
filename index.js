@@ -23,6 +23,12 @@ var beepboop = BeepBoop.start(controller, {
     // debug: true
 });
 
+// This is called when a new playlist is released
+// More specifically, Every Monday at 12:05 pm
+np.startNPCron(function() {
+    newNoon(true)
+});
+
 function update() {
     // Make sure we have all playlists in cache
     store.getAllPlaylists().then(function(playlists) {});
