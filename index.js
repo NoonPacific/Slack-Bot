@@ -27,7 +27,11 @@ function update() {
     // Make sure we have all playlists in cache
     store.getAllPlaylists().then(function(playlists) {});
 }
-update();
+
+// Ensure cache file of playlists on each container
+beepboop.on('add_resource', function(message) {
+    update();
+});
 
 // Listen for botkit events
 controller.on('bot_channel_join', function(bot, message) {
