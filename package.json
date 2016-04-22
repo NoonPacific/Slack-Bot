@@ -4,7 +4,8 @@
   "description": "A sample Beep Boop Node.js Slackbot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "NODE_ENV=dev node index.js",
+    "prod": "NODE_ENV=prod node index.js",
     "test": "mocha"
   },
   "repository": {
