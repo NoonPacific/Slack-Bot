@@ -23,6 +23,12 @@ var beepboop = BeepBoop.start(controller, {
     // debug: true
 });
 
+function update() {
+    // Make sure we have all playlists in cache
+    store.getAllPlaylists().then(function(playlists) {});
+}
+update();
+
 // Listen for botkit events
 controller.on('bot_channel_join', function(bot, message) {
     bot.reply(message, 'I\'m here!');
