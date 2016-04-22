@@ -3,6 +3,7 @@
 
 var Botkit = require('botkit');
 var BeepBoop = require('beepboop-botkit');
+var _ = require('underscore');
 
 var np = require('./np/noonpacific.js');
 var Store = require('./store/store.js');
@@ -18,8 +19,8 @@ var controller = Botkit.slackbot({
     json_file_store: './db_slackbutton_bot/',
 });
 
-BeepBoop.start(controller, {
-    debug: true
+var beepboop = BeepBoop.start(controller, {
+    // debug: true
 });
 
 // Listen for botkit events
@@ -150,50 +151,38 @@ function sendMessageToChannel(bot, channel_id, text, attachments) {
 function sendMessageToAllTeams(message, attachments) {
     console.log('Sending message to all teams');
 
-    console.log(controller.storage.teams);
-    controller.storage.teams.all(function(err, teams) {
+    Object.keys(beepboop.workers).forEach(function(id) {
+        var bot = beepboop.workers[id].worker;
 
-        if (err) {
-            throw new Error(err);
-        }
+        var gotChannels = function(err, channels) {
+            if (err) {
+                console.log('Error getting channels');
+                console.log(err);
+                return;
+            }
+            _.each(channels.channels, function(channel) {
+                if (channel.is_member && !channel.is_archived) {
+                    sendMessageToChannel(bot, channel.id, message, attachments);
+                }
+            });
+        };
 
-        console.log('here');
-        // connect all teams with bots up to slack!
-        for (var t in teams) {
-            console.log(t);
-        }
+        // groups are Slack private channels
+        var gotGroups = function(err, groups) {
+            if (err) {
+                console.log('Error getting groups');
+                console.log(err);
+                return;
+            }
+            _.each(groups.groups, function(group) {
+                if (!group.is_archived) {
+                    sendMessageToChannel(bot, group.id, message, attachments);
+                }
+            });
+        };
 
+        // console.log(bot);
+        bot.api.channels.list({}, gotChannels);
+        bot.api.groups.list({}, gotGroups);
     });
-
-    // var keys = Object.keys(_bots);
-    // keys.forEach(function(k, i) {
-    //     var bot = _bots[k];
-
-    //     if (process.env.NODE_ENV === 'prod' || bot.team_info.domain === 'tbwns') {
-    //         bot.api.channels.list({}, function(err, channels) {
-    //             bot.api.groups.list({}, function(err, groups) {
-    //                 var identity = bot.identity;
-    //                 var team = bot.team_info;
-    //                 var token = bot.config.token;
-
-    //                 // We want to send a message to all channels we are a member of
-    //                 _.each(channels.channels, function(channel) {
-    //                     if (channel.is_member && !channel.is_archived && channel.is_member) {
-    //                         sendMessageToChannel(bot, channel.id, message, attachments);
-    //                     }
-    //                 });
-
-    //                 // Send message to all private groups this bot is in
-    //                 _.each(groups.groups, function(group) {
-    //                     if (!group.is_archived) {
-    //                         sendMessageToChannel(bot, group.id, message, attachments);
-    //                     }
-    //                 });
-
-    //             });
-    //             // console.log(channels);
-    //             // console.log(message);
-    //         });
-    //     }
-    // });
 }
