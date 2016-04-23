@@ -149,7 +149,8 @@ function sendMessageToChannel(bot, channel_id, text, attachments) {
     var message = {
         token: bot.config.token,
         channel: channel_id,
-        text: text
+        text: text,
+        as_user: true
     };
     if (attachments !== undefined) message.attachments = JSON.stringify(attachments);
     var s_message = JSON.stringify(message);
