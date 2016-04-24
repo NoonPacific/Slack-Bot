@@ -40,9 +40,9 @@ beepboop.on('add_resource', function(message) {
 });
 
 // Listen for botkit events
-controller.on('bot_channel_join', function(bot, message) {
-    bot.reply(message, 'I\'m here!');
-});
+// controller.on('bot_channel_join', function(bot, message) {
+//     bot.reply(message, 'I\'m here!');
+// });
 
 controller.hears(['hi', 'hello'], ['direct_message', 'direct_mention'], function(bot, message) {
     // bot.reply(evt, 'hello from bot.js');
@@ -50,9 +50,9 @@ controller.hears(['hi', 'hello'], ['direct_message', 'direct_mention'], function
         // bot.reply(message, 'Hello! Checkout the latest noonpacific at ' + NOON_URL);
 });
 
-controller.hears('all teams', ['direct_message'], function(bot, message) {
-    sendMessageToAllTeams("Hello!");
-});
+// controller.hears('all teams', ['direct_message'], function(bot, message) {
+//     sendMessageToAllTeams("Hello!");
+// });
 
 controller.hears(['config'], ['direct_message', 'direct_mention'], function(bot, evt) {
     bot.reply(evt, 'CUSTOM_CONFIG_ITEM: ' + bot.config.CUSTOM_CONFIG_ITEM)
