@@ -11,8 +11,8 @@ var MIX = "http://noonpacific.com/#/mix/";
 var ID_OFFSET = 44;
 var NOON_OFFSET = 65
 
-// This is every Monday at 12:05 pm"
-var cron_string = '0 12 * * 0';
+// This is every Monday at 12:00 pm"
+var cron_string = '0 12 * * 1';
 // var cron_string = '* * * * *'; // dev testing every minute
 
 // What is public
