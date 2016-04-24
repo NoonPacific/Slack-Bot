@@ -62,7 +62,7 @@ controller.hears(['config'], ['direct_message', 'direct_mention'], function(bot,
 
 controller.hears('noon', ['ambient', 'direct_message'], function(bot, message) {
     if (process.env.NODE_ENV === 'dev') {
-        newNoon(true);
+        // newNoon(true);
     }
 });
 
