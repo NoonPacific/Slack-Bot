@@ -49,9 +49,7 @@ beepboop.on('add_resource', function(message) {
 // });
 
 controller.hears(['hi', 'hello'], to_bot, function(bot, message) {
-    // bot.reply(evt, 'hello from bot.js');
     sendMessageToChannel(bot, message.channel, 'Hello! Checkout the latest Noon Pacific mixtape at ' + NOON_URL)
-        // bot.reply(message, 'Hello! Checkout the latest noonpacific at ' + NOON_URL);
 });
 
 // controller.hears('all teams', ['direct_message'], function(bot, message) {
