@@ -11,6 +11,9 @@ var store = new Store('NoonPacific.json');
 
 var NOON_URL = "http://noonpacific.com/";
 
+// Bot responds to these types of messages
+var to_bot = ["direct_message", "direct_mention"];
+
 // THIS IS NEEDED TO MAKE API CALLS TO NP API
 // PROBABLY A GOOD IDEA TO FIX THIS
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -24,9 +27,10 @@ var beepboop = BeepBoop.start(controller, {
 });
 
 // This is called when a new playlist is released
-// More specifically, Every Monday at 12:05 pm
+// More specifically, Every Monday at 12:00 pm
 np.startNPCron(function() {
-    newNoon(true)
+    console.log('Noon Cron');
+    newNoon(true);
 });
 
 function update() {
@@ -44,9 +48,9 @@ beepboop.on('add_resource', function(message) {
 //     bot.reply(message, 'I\'m here!');
 // });
 
-controller.hears(['hi', 'hello'], ['direct_message', 'direct_mention'], function(bot, message) {
+controller.hears(['hi', 'hello'], to_bot, function(bot, message) {
     // bot.reply(evt, 'hello from bot.js');
-    sendMessageToChannel(bot, message.channel, 'Hello! Checkout the latest noonpacific at ' + NOON_URL)
+    sendMessageToChannel(bot, message.channel, 'Hello! Checkout the latest Noon Pacific mixtape at ' + NOON_URL)
         // bot.reply(message, 'Hello! Checkout the latest noonpacific at ' + NOON_URL);
 });
 
@@ -54,15 +58,15 @@ controller.hears(['hi', 'hello'], ['direct_message', 'direct_mention'], function
 //     sendMessageToAllTeams("Hello!");
 // });
 
-controller.hears(['config'], ['direct_message', 'direct_mention'], function(bot, evt) {
-    bot.reply(evt, 'CUSTOM_CONFIG_ITEM: ' + bot.config.CUSTOM_CONFIG_ITEM)
-});
+// controller.hears(['config'], to_bot, function(bot, evt) {
+//     bot.reply(evt, 'CUSTOM_CONFIG_ITEM: ' + bot.config.CUSTOM_CONFIG_ITEM)
+// });
 
 // NP
 
-controller.hears('noon', ['ambient', 'direct_message'], function(bot, message) {
+controller.hears('noon', to_bot, function(bot, message) {
     if (process.env.NODE_ENV === 'dev') {
-        // newNoon(true);
+        newNoon(true);
     }
 });
 
@@ -74,7 +78,7 @@ controller.hears('update', ['direct_message'], function(bot, message) {
     });
 });
 
-controller.hears('latest', ['direct_mention', 'direct_message'], function(bot, message) {
+controller.hears('latest', to_bot, function(bot, message) {
     var latest = store.getLatestNoon();
     if (!latest) {
         bot.reply(message, 'Could not find latest Noon');
@@ -89,7 +93,7 @@ controller.hears('latest', ['direct_mention', 'direct_message'], function(bot, m
     }
 });
 
-controller.hears('^\\d+$', ['direct_message', 'direct_mention'], function(bot, message) {
+controller.hears('^\\d+$', to_bot, function(bot, message) {
     var noon_id = parseInt(message.text);
     store.getPlaylistWithTracks({
         playlist_number: noon_id
@@ -105,7 +109,7 @@ controller.hears('^\\d+$', ['direct_message', 'direct_mention'], function(bot, m
     });
 });
 
-controller.hears('help', ['direct_mention', 'direct_message'], function(bot, message) {
+controller.hears('help', to_bot, function(bot, message) {
     var reply = "";
     reply += "*Hi* I'm NoonBot!. _This is what I can do_\n";
     reply += "Every Monday I notify all channels I'm in on the latest Noon Pacific\n";
@@ -152,7 +156,9 @@ function sendMessageToChannel(bot, channel_id, text, attachments) {
         text: text,
         as_user: true
     };
-    if (attachments !== undefined) message.attachments = JSON.stringify(attachments);
+    if (attachments !== undefined) {
+        message.attachments = JSON.stringify(attachments);
+    }
     var s_message = JSON.stringify(message);
     console.log('Sending message to: ' + channel_id);
     bot.api.chat.postMessage(message, function(err) {
