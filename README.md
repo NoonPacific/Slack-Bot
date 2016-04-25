@@ -19,10 +19,6 @@ _Commands can either be a direct message or direct mention_
 
 This bot was created to run on the [BeepBoop](https://beepboophq.com) platform.
 
-### Assumptions
-* You have already signed up with [Beep Boop](https://beepboophq.com) and have a local fork of this project.
-* You have sufficient rights in your Slack team to configure a bot and generate/access a Slack API token.
-
 1. Fork this repo and `cd` into it
 2. Run `npm install`
 4. Go to the [BeepBoop projects page](https://beepboophq.com/0_o/my-projects) and create a new bot from forked Github repo.
