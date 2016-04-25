@@ -1,37 +1,31 @@
-# starter-node-bot
+# Noon Pacific Slack Bot
 
-## Overview
-A simple starting point for creating a Beep Boop hostable, Node.js based Slack bot with botkit
+[![Build Status](https://drone.io/github.com/coffee-cup/noon-pacific-bot/status.png)](https://drone.io/github.com/coffee-cup/noon-pacific-bot/latest)
 
-Visit [Beep Boop](https://beepboophq.com/docs/article/overview) to get the scoop on the the Beep Boop hosting platform. The Slack API documentation can be found [here](https://api.slack.com/).
+This is the start of a Slack bot for Noon Pacific.
 
-## Assumptions
+The bot will notify all teams it has been invited to of the latest [Noon Pacific playlist](http://noonpacific.com/#/).
+It also allows you to query and get the tracks for any playlist.
+
+_Commands can either be a direct message or direct mention_
+
+| Command | Action |
+|:---|:---|
+|`latest`| Get the latest playlist |
+|`{number}`| Get _Noon // {number}_|
+|`help`| Show bot help |
+
+## Installation
+
+This bot was created to run on the [BeepBoop](https://beepboophq.com) platform.
+
+### Assumptions
 * You have already signed up with [Beep Boop](https://beepboophq.com) and have a local fork of this project.
 * You have sufficient rights in your Slack team to configure a bot and generate/access a Slack API token.
 
-## Usage
-
-### Run locally
-	npm install
-	SLACK_TOKEN=<YOUR_SLACK_TOKEN> npm start
-
-Things are looking good if the console prints something like:
-
-    ** API CALL: https://slack.com/api/rtm.start
-    ** BOT ID:  witty  ...attempting to connect to RTM!
-    ** API CALL: https://slack.com/api/chat.postMessage
-
-### Run locally in Docker
-	docker build -t starter-node .`
-	docker run --rm -it -e SLACK_TOKEN=<YOUR SLACK API TOKEN> starter-node
-
-### Run in BeepBoop
-If you have linked your local repo with the Beep Boop service (check [here](https://beepboophq.com/0_o/my-projects)), changes pushed to the remote master branch will automatically deploy.
-
-## Acknowledgements
-
-This code uses the [botkit](https://github.com/howdyai/botkit) npm module by the fine folks at Howdy.ai.
-
-## License
-
-See the [LICENSE](LICENSE.md) file (MIT).
+1. Fork this repo and `cd` into it
+2. Run `npm install`
+4. Go to the [BeepBoop projects page](https://beepboophq.com/0_o/my-projects) and create a new bot from forked Github repo.
+5. Make sure the bot is a multi-team bot on the BeepBoop settings page with Slack client id and secret.
+6. Start the bot on BeepBoop.
+7. _To run Locally, run `npm run dev` for dev mode or `npm run prod` for a production environment._
