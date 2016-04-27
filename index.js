@@ -109,11 +109,12 @@ controller.hears('^\\d+$', to_bot, function(bot, message) {
 
 controller.hears('help', to_bot, function(bot, message) {
     var reply = "";
-    reply += "*Hi* I'm NoonBot!. _This is what I can do_\n";
-    reply += "Every Monday I notify all channels I'm in on the latest Noon Pacific\n";
-    reply += "`latest`           : Get the latest playlist\n";
-    reply += "`{integer}`     : Get Noon // {number}\n";
-    reply += "`help`              : _Show this_";
+    reply += "*Hi* I'm NoonBot! _This is what I do._\n";
+    reply += "Every Monday I will notify all channels I belong to of the new Noon Pacific mixtape.\n";
+    reply += "You can also *pm* or *direct message* me any of these commands.\n";
+    reply += "`latest`\t: Get the latest playlist\n";
+    reply += "`{number}`\t: Get Noon // {number}\n";
+    reply += "`help`\t: _Show this_";
     sendMessageToChannel(bot, message.channel, reply)
 });
 
