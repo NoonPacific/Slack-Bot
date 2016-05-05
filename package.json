@@ -1,7 +1,7 @@
 {
-  "name": "node-slack-bot",
+  "name": "noonbot",
   "version": "1.0.0",
-  "description": "A sample Beep Boop Node.js Slackbot",
+  "description": "Slack bot for Noon Pacific",
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=prod node index.js",
@@ -17,14 +17,16 @@
   "keywords": [
     "slackbot",
     "bot",
-    "slack"
+    "slack",
+    "noon",
+    "pacific"
   ],
-  "author": "",
+  "author": "coffee-cup",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/beepboophq/node-slack-bot/issues"
+    "url": "https://github.com/coffee-cup/noonbot/issues"
   },
-  "homepage": "https://github.com/beepboophq/node-slack-bot#readme",
+  "homepage": "https://github.com/coffee-cup/noonbot#readme",
   "dependencies": {
     "beepboop-botkit": "^1.1.2",
     "botkit": "0.0.5",
