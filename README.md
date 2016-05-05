@@ -1,6 +1,6 @@
 # Noon Pacific Slack Bot
 
-[![Build Status](https://drone.io/github.com/coffee-cup/noon-pacific-bot/status.png)](https://drone.io/github.com/coffee-cup/noon-pacific-bot/latest)
+[![Build Status](https://drone.io/github.com/coffee-cup/noonbot/status.png)](https://drone.io/github.com/coffee-cup/noonbot/latest)
 
 This is the start of a Slack bot for Noon Pacific.
 
