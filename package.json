@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/beepboophq/node-slack-bot.git"
+    "url": "git+https://github.com/NoonPacific/Noon-Bot.git"
   },
   "keywords": [
     "slackbot",
@@ -24,9 +24,9 @@
   "author": "coffee-cup",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/coffee-cup/noonbot/issues"
+    "url": "https://github.com/NoonPacific/Noon-Bot/issues"
   },
-  "homepage": "https://github.com/coffee-cup/noonbot#readme",
+  "homepage": "https://github.com/NoonPacific/Noon-Bot#readme",
   "dependencies": {
     "beepboop-botkit": "^1.1.2",
     "botkit": "0.0.5",
