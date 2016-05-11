@@ -73,7 +73,7 @@ controller.hears('update', ['direct_message'], function(bot, message) {
     });
 });
 
-controller.hears(['latest', 'l'], to_bot, function(bot, message) {
+controller.hears(['latest', '^l$'], to_bot, function(bot, message) {
     var latest = store.getLatestNoon();
     if (!latest) {
         bot.reply(message, 'Could not find latest Noon');
@@ -104,7 +104,7 @@ controller.hears('^\\d+$', to_bot, function(bot, message) {
     });
 });
 
-controller.hears(['help', 'h'], to_bot, function(bot, message) {
+controller.hears(['help', '^h$'], to_bot, function(bot, message) {
     var reply = "";
     reply += "*Hi* I'm NoonBot! _This is what I do._\n";
     reply += "Every Monday I will notify all channels I belong to of the new Noon Pacific mixtape.\n";
