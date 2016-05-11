@@ -44,18 +44,6 @@ beepboop.on('add_resource', function(message) {
 });
 
 // Listen for botkit events
-controller.on('create_bot', function(bot, config) {
-    bot.startPrivateConversation({
-        user: config.createdBy
-    }, function(err, convo) {
-        if (err) {
-            console.log(err);
-        } else {
-            convo.say('Hello, thanks for adding me to your team.');
-            convo.say('/invite me to a channel so I can be of use!');
-        }
-    });
-});
 
 controller.hears(['hi', 'hello'], to_bot, function(bot, message) {
     sendMessageToChannel(bot, message.channel, 'Hello! Checkout the latest Noon Pacific mixtape at ' + NOON_URL)
