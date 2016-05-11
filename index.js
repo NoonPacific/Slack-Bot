@@ -44,9 +44,18 @@ beepboop.on('add_resource', function(message) {
 });
 
 // Listen for botkit events
-// controller.on('bot_channel_join', function(bot, message) {
-//     bot.reply(message, 'I\'m here!');
-// });
+controller.on('create_bot', function(bot, config) {
+    bot.startPrivateConversation({
+        user: config.createdBy
+    }, function(err, convo) {
+        if (err) {
+            console.log(err);
+        } else {
+            convo.say('Hello, thanks for adding me to your team.');
+            convo.say('/invite me to a channel so I can be of use!');
+        }
+    });
+});
 
 controller.hears(['hi', 'hello'], to_bot, function(bot, message) {
     sendMessageToChannel(bot, message.channel, 'Hello! Checkout the latest Noon Pacific mixtape at ' + NOON_URL)
@@ -76,7 +85,7 @@ controller.hears('update', ['direct_message'], function(bot, message) {
     });
 });
 
-controller.hears('latest', to_bot, function(bot, message) {
+controller.hears(['latest', 'l'], to_bot, function(bot, message) {
     var latest = store.getLatestNoon();
     if (!latest) {
         bot.reply(message, 'Could not find latest Noon');
@@ -107,7 +116,7 @@ controller.hears('^\\d+$', to_bot, function(bot, message) {
     });
 });
 
-controller.hears('help', to_bot, function(bot, message) {
+controller.hears(['help', 'h'], to_bot, function(bot, message) {
     var reply = "";
     reply += "*Hi* I'm NoonBot! _This is what I do._\n";
     reply += "Every Monday I will notify all channels I belong to of the new Noon Pacific mixtape.\n";
