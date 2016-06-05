@@ -22,7 +22,7 @@ module.exports = {
     ID_OFFSET: ID_OFFSET,
 
     // Starts cron job which call callback
-    // every Monday at 12:05 pm
+    // every Monday at 12:00 pm
     startNPCron: function(callback) {
         if (!callback) {
             console.log('startNPCron requires callback');
