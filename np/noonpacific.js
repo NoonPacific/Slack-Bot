@@ -55,7 +55,7 @@ module.exports = {
         var release = moment(playlist.release_date);
         var message = "";
         message += !new_msg ? "" : "_New Mixtape " + release.format("MMMM Do") + "_\n";
-        message += ":headphones: <" + playlist_url + "|*" + playlist.name + "*>\n";
+        message += ":tada: <" + playlist_url + "|*" + playlist.name + "*>\n";
         message += new_msg ? "" : "_Release Date " + release.format("MMMM Do") + "_\n";
         playlist.tracks.forEach(function(track, i) {
             message += track.track_number + ". ";
