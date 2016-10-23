@@ -1,22 +1,14 @@
-// example
 'use strict'
 
 var Botkit = require('botkit');
 var BeepBoop = require('beepboop-botkit');
 var _ = require('underscore');
-
-var np = require('./np/noonpacific.js');
-var Store = require('./store/store.js');
-var store = new Store('NoonPacific.json');
+var np = require('./noonpacific.js');
 
 var NOON_URL = "http://noonpacific.com/";
 
 // Bot responds to these types of messages
 var to_bot = ["direct_message", "direct_mention"];
-
-// THIS IS NEEDED TO MAKE API CALLS TO NP API
-// PROBABLY A GOOD IDEA TO FIX THIS
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 var controller = Botkit.slackbot({
     json_file_store: './db_slackbutton_bot/',
@@ -33,29 +25,11 @@ np.startNPCron(function() {
     newNoon(true);
 });
 
-function update() {
-    // Make sure we have all playlists in cache
-    store.getAllPlaylists().then(function(playlists) {});
-}
-
-// Ensure cache file of playlists on each container
-beepboop.on('add_resource', function(message) {
-    update();
-});
-
 // Listen for botkit events
 
 controller.hears(['hi', 'hello'], to_bot, function(bot, message) {
     sendMessageToChannel(bot, message.channel, 'Hello! Checkout the latest Noon Pacific mixtape at ' + NOON_URL)
 });
-
-// controller.hears('all teams', ['direct_message'], function(bot, message) {
-//     sendMessageToAllTeams("Hello!");
-// });
-
-// controller.hears(['config'], to_bot, function(bot, evt) {
-//     bot.reply(evt, 'CUSTOM_CONFIG_ITEM: ' + bot.config.CUSTOM_CONFIG_ITEM)
-// });
 
 // NP
 
@@ -65,42 +39,26 @@ controller.hears('noon', to_bot, function(bot, message) {
     }
 });
 
-controller.hears('update', ['direct_message'], function(bot, message) {
-    store.getAllPlaylists().then(function(playlists) {
-        var latest = playlists[0];
-        var reply = "Fetched all playlists: " + latest.name;
-        sendMessageToChannel(bot, message.channel, reply);
+controller.hears(['latest', '^l$'], to_bot, function(bot, message) {
+    np.getLatestMixtape().then(function(mixtape) {
+        if (!mixtape) {
+            sendMessageToChannel(bot, message.channel, 'Could not find latest Noon');
+        }
+
+        var reply = np.formatMixtape(mixtape);
+        var attachments = np.createMixtapeAttachment(mixtape);
+        sendMessageToChannel(bot, message.channel, reply, attachments);
     });
 });
 
-controller.hears(['latest', '^l$'], to_bot, function(bot, message) {
-    var latest = store.getLatestNoon();
-    if (!latest) {
-        bot.reply(message, 'Could not find latest Noon');
-    } else {
-        store.getPlaylistWithTracks({
-            id: latest.id
-        }).then(function(playlist) {
-            var reply = np.formatPlaylist(playlist);
-            var attachments = np.createPlaylistAttachment(playlist);
-            sendMessageToChannel(bot, message.channel, reply, attachments);
-        });
-    }
-});
-
 controller.hears('^\\d+$', to_bot, function(bot, message) {
-    var noon_id = parseInt(message.text);
-    store.getPlaylistWithTracks({
-        playlist_number: noon_id
-    }).then(function(playlist) {
-        if (!playlist) {
-            bot.reply(message, "_Sorry, Noon " + noon_id + " is not available_");
-        } else {
-            var reply = np.formatPlaylist(playlist);
-            var attachments = np.createPlaylistAttachment(playlist);
-            // bot.reply(message, reply);
-            sendMessageToChannel(bot, message.channel, reply, attachments);
-        }
+    var noonNumber = parseInt(message.text);
+    np.getMixtapeWithTracks(noonNumber).then(function(mixtape) {
+        var reply = np.formatMixtape(mixtape);
+        var attachments = np.createMixtapeAttachment(mixtape);
+        sendMessageToChannel(bot, message.channel, reply, attachments);
+    }).catch(function(err) {
+        sendMessageToChannel(bot, message.channel, '_Mixtape not available_');
     });
 });
 
@@ -119,27 +77,17 @@ controller.hears(['help', '^h$'], to_bot, function(bot, message) {
 // when optional alays is false  or empty (default) it will
 // only notifiy teams when there was a new playlist
 function newNoon(always) {
-    var latest = store.getLatestNoon();
-    var latest_id = -1;
-    if (latest) {
-        latest_id = latest.id;
-    }
-
-    store.getAllPlaylists().then(function(playlists) {
-        // The Noon Pacific is new
-        var new_latest = store.getLatestNoon();
-        if (always || latest_id !== new_latest.id) {
-            console.log('New Noon! ' + new_latest.id);
-            store.getPlaylistWithTracks({
-                id: new_latest.id
-            }).then(function(playlist) {
-                var reply = np.formatPlaylist(playlist, true);
-                var attachments = np.createPlaylistAttachment(playlist);
-                sendMessageToAllTeams(reply, attachments);
-            });
-        } else {
-            console.log('Noon ' + latest_id + ' is the latest playlist');
+    np.getLatestMixtape().then(function(mixtape) {
+        if (!mixtape) {
+            console.log('Could not get latest mixtape for new noon');
+            return;
         }
+
+        var reply = np.formatMixtape(mixtape, true);
+        var attachments = np.createMixtapeAttachment(mixtape);
+        sendMessageToAllTeams(reply, attachments);
+    }).catch(function(err) {
+        console.log(err);
     });
 }
 
@@ -173,6 +121,7 @@ function sendMessageToAllTeams(message, attachments) {
     Object.keys(beepboop.workers).forEach(function(id) {
         var bot = beepboop.workers[id].worker;
 
+        // Slack public channels
         var gotChannels = function(err, channels) {
             if (err) {
                 console.log('Error getting channels');
@@ -186,7 +135,7 @@ function sendMessageToAllTeams(message, attachments) {
             });
         };
 
-        // groups are Slack private channels
+        // Groups are Slack private channels
         var gotGroups = function(err, groups) {
             if (err) {
                 console.log('Error getting groups');
