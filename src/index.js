@@ -42,7 +42,7 @@ controller.hears('noon', to_bot, function(bot, message) {
 controller.hears(['latest', '^l$'], to_bot, function(bot, message) {
     np.getLatestMixtape().then(function(mixtape) {
         if (!mixtape) {
-            sendMessageToChannel(bot, message.channel, 'Could not find latest Noon');
+            sendMessageToChannel(bot, message.channel, '_Could not find latest Noon_');
         }
 
         var reply = np.formatMixtape(mixtape);
