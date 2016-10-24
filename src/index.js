@@ -5,7 +5,7 @@ var BeepBoop = require('beepboop-botkit');
 var _ = require('underscore');
 var np = require('./noonpacific.js');
 
-var NOON_URL = "http://noonpacific.com/";
+var NOON_URL = "http://noonpacific.com";
 
 // Bot responds to these types of messages
 var to_bot = ["direct_message", "direct_mention"];
