@@ -36,6 +36,16 @@ module.exports = {
         )
     },
 
+    formatTracksForSearch: function(query, tracks) {
+        var resultsPlurSing = tracks.length === 1 ? 'result' : 'results';
+        var message = 'Found ' + tracks.length + ' ' + resultsPlurSing + ' for search *' + query + '*\n';
+        tracks.forEach(function(track, i) {
+            message += "<" + track.permalink_url + "|*" + track.artist + "*> - ";
+            message += track.title + "\n";
+        });
+        return message;
+    },
+
     // Returns (Slack) formatted message of mixtape
     // Formats differently if new = true
     formatMixtape: function(mixtape, new_msg) {
@@ -74,6 +84,16 @@ module.exports = {
     getMixtapeWithTracks: function(noonNumber) {
         var noonSlug = getNoonSlug(noonNumber);
         return wl.getMixtape(noonSlug).then(getTracksForMixtape);
+    },
+
+    searchTracksWithQuery: function(query) {
+        return wl.getAllTracks({
+            results: true,
+            all: false,
+            filters: {
+                search: query
+            }
+        });
     }
 };
 

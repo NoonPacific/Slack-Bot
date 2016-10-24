@@ -27,7 +27,7 @@ np.startNPCron(function() {
 
 // Listen for botkit events
 
-controller.hears(['hi', 'hello'], to_bot, function(bot, message) {
+controller.hears(['^hi$', '^hello$'], to_bot, function(bot, message) {
     sendMessageToChannel(bot, message.channel, 'Hello! Checkout the latest Noon Pacific mixtape at ' + NOON_URL)
 });
 
@@ -62,14 +62,33 @@ controller.hears('^\\d+$', to_bot, function(bot, message) {
     });
 });
 
+controller.hears('search (.+)', to_bot, function(bot, message) {
+    if (message.match.length < 2) {
+        return;
+    }
+    var query = message.match[1];
+    np.searchTracksWithQuery(query).then(function(tracks) {
+        if (!tracks || tracks.length === 0) {
+            sendMessageToChannel(bot, message.channel, '_Could not find any tracks for search query *' + query + '*_');
+            return;
+        }
+
+        var reply = np.formatTracksForSearch(query, tracks);
+        sendMessageToChannel(bot, message.channel, reply);
+    }).catch(function(err) {
+        sendMessageToChannel(bot, message.channel, '_Search for ' + query + ' failed_');
+    });
+});
+
 controller.hears(['help', '^h$'], to_bot, function(bot, message) {
     var reply = "";
     reply += "*Hi* I'm NoonBot! _This is what I do._\n";
     reply += "Every Monday I will notify all channels I belong to of the new Noon Pacific mixtape.\n";
     reply += "You can also *pm* or *direct message* me any of these commands.\n";
-    reply += "`latest`\t: Get the latest playlist\n";
-    reply += "`{number}`\t: Get Noon // {number}\n";
-    reply += "`help`\t: _Show this_";
+    reply += "`latest`:\tGet the latest playlist\n";
+    reply += "`{number}`:\tGet Noon // {number}\n";
+    reply += "`search {query}`:\tSearch track titles and artists for a matching substring _(first 20 results)_\n";
+    reply += "`help`:\t_Show this_";
     sendMessageToChannel(bot, message.channel, reply)
 });
 
